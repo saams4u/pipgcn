@@ -16,11 +16,11 @@ gzip -d train.cpkl.gz
 gzip -d test.cpkl.gz
 cd ..
 
-python experiment_runner.py no_conv.yml
+# python experiment_runner.py no_conv.yml
 #python experiment_runner.py single_weight_matrix.yml
 #python experiment_runner.py node_average.yml
 #python experiment_runner.py node_edge_average.yml
 #python experiment_runner.py diffusion_p2_noDO.yml
 #python experiment_runner.py diffusion_p5_noDO.yml
-#python experiment_runner.py deep_tensor.yml
+python experiment_runner.py deep_tensor.yml
 #python experiment_runner.py order_dependent.yml
