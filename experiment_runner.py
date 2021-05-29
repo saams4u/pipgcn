@@ -2,9 +2,10 @@ import os
 import sys
 import yaml
 import traceback
-import cPickle
 import tensorflow as tf
 import numpy as np
+import pickle
+
 from configuration import data_directory, experiment_directory, output_directory, seeds, printt
 from train_test import TrainTest
 from pw_classifier import PWClassifier
@@ -35,28 +36,29 @@ with open(os.path.join(outdir, "experiment.yml"), 'w') as f:
 prev_train_data_file = ""
 prev_test_data_file = ""
 first_experiment = True
+
 for name, experiment in exp_specs["experiments"]:
     train_data_file = os.path.join(data_directory, experiment["train_data_file"])
     test_data_file = os.path.join(data_directory, experiment["test_data_file"])
     try:
         # Reuse train data if possible.
         if train_data_file != prev_train_data_file:
-            printt("Loading train data")
-            train_list, train_data = cPickle.load(open(train_data_file))
+            print("Loading train data")
+            train_list, train_data = pickle.load(open(train_data_file, "rb"), encoding='latin1')
             prev_train_data_file = train_data_file
         if test_data_file != prev_test_data_file:
-            printt("Loading test data")
-            test_list, test_data = cPickle.load(open(test_data_file))
+            print("Loading test data")
+            test_list, test_data = pickle.load(open(test_data_file, "rb"), encoding='latin1')
             prev_test_data_file = test_data_file
         # create data dictionary
         data = {"train": train_data, "test": test_data}
         # perform experiment for each random seed
         for i, seed_pair in enumerate(seeds):
-            printt("{}: rep{}".format(name, i))
+            print("{}: rep{}".format(name, i))
             # set tensorflow and numpy seeds
             tf.set_random_seed(seed_pair["tf_seed"])
             np.random.seed(int(seed_pair["np_seed"]))
-            printt("Building model")
+            print("Building model")
             # build model
             model = PWClassifier(experiment["layers"], experiment["layer_args"], data["train"], 0.1, 0.1, outdir)
             # train and test the model
@@ -73,5 +75,5 @@ for name, experiment in exp_specs["experiments"]:
         if er is KeyboardInterrupt:
             raise er
         ex_str = traceback.format_exc()
-        printt(ex_str)
-        printt("Experiment failed: {}".format(exp_specs))
+        print(ex_str)
+        print("Experiment failed: {}".format(exp_specs))
