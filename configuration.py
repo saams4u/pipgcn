@@ -12,6 +12,10 @@ except:
 ## Numpy print options
 np.set_printoptions(precision=3)
 
+os.environ["PL_EXPERIMENTS"] = "/content/pipgcn/experiments"
+os.environ["PL_DATA"] = "/content/pipgcn/data"
+os.environ["PL_OUT"] = "/content/pipgcn/results"
+
 ## Directories 
 experiment_directory = os.environ["PL_EXPERIMENTS"]  # contains experiment yaml files
 data_directory = os.environ["PL_DATA"]  # contains cPickle data files 
